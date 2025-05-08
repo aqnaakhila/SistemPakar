@@ -1,0 +1,146 @@
+
+Rule 1
+if
+Layanan Teknis = Upgrade kualitas AND
+Strategi Bisnis = Tidak perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan puas
+Then ISP Local = ISP Berkualitas Baik
+
+Rule 2
+if
+Layanan Teknis = Upgrade kualitas AND
+Strategi Bisnis = Tidak perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan tidak puas
+Then ISP Local = ISP Bermasalah
+
+Rule 3
+if
+Layanan Teknis = Upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan OR
+Kepatuhan Regulasi = Tidak memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan puas
+Then ISP Local = ISP Perlu Peningkatan
+
+Rule 4
+if
+Layanan Teknis = Upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan OR
+Kepatuhan Regulasi = Tidak memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan tidak puas
+Then ISP Local = ISP Bermasalah
+
+Rule 5
+if
+Layanan Teknis = Upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Tidak memenuhi aturan
+Then ISP Local = ISP Bermasalah
+
+Rule 6
+if
+Layanan Teknis = Tidak perlu upgrade kualitas AND
+Strategi Bisnis = Tidak perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan OR
+Kepatuhan Regulasi = Tidak memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan puas
+Then ISP Local = ISP Berkualitas Baik
+
+Rule 7
+if
+Layanan Teknis = Tidak perlu upgrade kualitas AND
+Strategi Bisnis = Tidak perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan OR
+Kepatuhan Regulasi = Tidak memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan tidak puas
+Then ISP Local = ISP Perlu Peningkatan
+
+Rule 8
+if
+Layanan Teknis = Tidak perlu upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan puas
+Then ISP Local = ISP Berkualitas Baik
+
+Rule 9
+if
+Layanan Teknis = Tidak perlu upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Tidak memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan puas
+Then ISP Local = ISP Perlu Perbaikan
+
+Rule 10
+if
+Layanan Teknis = Tidak perlu upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan puas
+Then ISP Local = ISP Perlu Perbaikan
+
+Rule 11
+if
+Layanan Teknis = Tidak perlu upgrade kualitas AND
+Strategi Bisnis = Perlu perbaikan AND
+Kepatuhan Regulasi = Tidak memenuhi aturan AND
+Kepuasan Pelanggan = Pelanggan tidak puas
+Then ISP Local = ISP Bermasalah
+
+Rule 12
+if
+Stabilitas Jaringan = Baik AND
+Kapasitas Bandwidth = Besar OR
+Kapasitas Bandwidth = Sedang
+Then Layanan Sistem = Tidak perlu upgrade kualitas
+
+Rule 13
+if
+Stabilitas Jaringan = Baik AND
+Kapasitas Bandwidth = Rendah
+Then Layanan Sistem = Upgrade kualitas
+
+Rule 14
+if
+Stabilitas Jaringan = Buruk
+Then Layanan Sistem = Upgrade kualitas
+
+Rule 15
+if
+Harga = Murah OR
+Harga = Standar OR
+Harga = Mahal AND
+Pelayanan = Baik
+Then Strategi Bisnis = Tidak perlu perbaikan
+
+Rule 16
+if
+Harga = Murah OR
+Harga = Standar OR
+Harga = Mahal AND
+Pelayanan = Buruk
+Then Strategi Bisnis = Perlu perbaikan
+
+Rule 17
+if
+Rating = Bagus OR
+Rating = Normal AND
+Kualitas Layanan = Bagus
+Then Kepuasan Pelanggan = Pelanggan Puas
+
+Rule 18
+if
+Rating = Buruk AND
+Kualitas Layanan = Bagus
+Then Kepuasan Pelanggan = Pelanggan Tidak Puas
+
+Rule 19
+if
+Rating = Bagus OR
+Rating = Normal OR
+Rating = Buruk AND
+Kualitas Layanan = Buruk
+Then Kepuasan Pelanggan = Pelanggan Tidak Puas
