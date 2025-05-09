@@ -1,62 +1,68 @@
-from forward_reasoning.kategory import *
+from forward_reasoning.kategory import kategorikan_input
 
 def infer(data):
+    # Kategorisasi awal input
     data = kategorikan_input(data)
     inferred = {}
 
-    # Layanan Teknis
+    # Aturan 12, 13, 14 - Layanan Teknis
     if data['Stabilitas Jaringan'] == 'Baik' and data['Kapasitas Bandwidth'] in ['Besar', 'Sedang']:
         inferred['Layanan Teknis'] = 'Tidak perlu upgrade kualitas'
     else:
         inferred['Layanan Teknis'] = 'Upgrade kualitas'
 
-    # Strategi Bisnis
+    # Aturan 15, 16 - Strategi Bisnis
     if data['Pelayanan'] == 'Baik':
         inferred['Strategi Bisnis'] = 'Tidak perlu perbaikan'
     else:
         inferred['Strategi Bisnis'] = 'Perlu perbaikan'
 
-    # Kepuasan Pelanggan
+    # Aturan 17, 18, 19 - Kepuasan Pelanggan
     if data['Rating Kategori'] in ['Bagus', 'Normal'] and data['Kualitas Layanan'] == 'Bagus':
         inferred['Kepuasan Pelanggan'] = 'Pelanggan puas'
     else:
         inferred['Kepuasan Pelanggan'] = 'Pelanggan tidak puas'
 
-    # Kesimpulan ISP
-    lt = inferred['Layanan Teknis']
-    sb = inferred['Strategi Bisnis']
-    kp = data['Kepatuhan Regulasi']
-    kpgn = inferred['Kepuasan Pelanggan']
+    # Kesimpulan ISP - Aturan 1-11
+    layananteknis = inferred['Layanan Teknis']
+    strategibisnis = inferred['Strategi Bisnis']
+    kepatuhanregualasi = data['Kepatuhan Regulasi']
+    kepuasanpelanggan = inferred['Kepuasan Pelanggan']
 
     result = "Tidak dapat disimpulkan"
-    explanation = []  # simpan penjelasan
+    explanation = []
 
-    # Tambahkan logika explain di tiap rule
-    if lt == 'Upgrade kualitas' and sb == 'Tidak perlu perbaikan' and kp == 'Memenuhi aturan' and kpgn == 'Pelanggan puas':
+    if layananteknis == 'Upgrade kualitas' and strategibisnis == 'Tidak perlu perbaikan' and kepuasanpelanggan == 'Memenuhi aturan' and kepatuhanregualasi == 'Pelanggan puas':
         result = 'ISP Berkualitas Baik'
-        explanation.append("Rule 1: Semua kondisi terpenuhi → ISP Berkualitas Baik")
-    elif lt == 'Upgrade kualitas' and sb == 'Tidak perlu perbaikan' and kp == 'Memenuhi aturan' and kpgn == 'Pelanggan tidak puas':
+        explanation.append("Rule 1: Semua kondisi baik → ISP Berkualitas Baik")
+    elif layananteknis == 'Upgrade kualitas' and strategibisnis == 'Tidak perlu perbaikan' and kepuasanpelanggan == 'Memenuhi aturan' and kepatuhanregualasi == 'Pelanggan tidak puas':
         result = 'ISP Bermasalah'
         explanation.append("Rule 2: Pelanggan tidak puas → ISP Bermasalah")
-    elif lt == 'Upgrade kualitas' and sb == 'Perlu perbaikan' and kpgn == 'Pelanggan puas':
+    elif layananteknis == 'Upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepatuhanregualasi == 'Pelanggan puas':
         result = 'ISP Perlu Peningkatan'
-        explanation.append("Rule 3: Perlu perbaikan strategi + pelanggan puas → ISP Perlu Peningkatan")
-    elif lt == 'Upgrade kualitas' and sb == 'Perlu perbaikan' and kpgn == 'Pelanggan tidak puas':
+        explanation.append("Rule 3: Strategi perlu perbaikan tapi pelanggan puas → ISP Perlu Peningkatan")
+    elif layananteknis == 'Upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepatuhanregualasi == 'Pelanggan tidak puas':
         result = 'ISP Bermasalah'
         explanation.append("Rule 4: Semua buruk → ISP Bermasalah")
-    elif lt == 'Tidak perlu upgrade kualitas' and sb == 'Tidak perlu perbaikan' and kpgn == 'Pelanggan puas':
+    elif layananteknis == 'Upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepuasanpelanggan == 'Tidak memenuhi aturan':
+        result = 'ISP Bermasalah'
+        explanation.append("Rule 5: Upgrade + strategi buruk + tidak memenuhi aturan → ISP Bermasalah")
+    elif layananteknis == 'Tidak perlu upgrade kualitas' and strategibisnis == 'Tidak perlu perbaikan' and kepatuhanregualasi == 'Pelanggan puas':
         result = 'ISP Berkualitas Baik'
         explanation.append("Rule 6: Semua baik → ISP Berkualitas Baik")
-    elif lt == 'Tidak perlu upgrade kualitas' and sb == 'Tidak perlu perbaikan' and kpgn == 'Pelanggan tidak puas':
+    elif layananteknis == 'Tidak perlu upgrade kualitas' and strategibisnis == 'Tidak perlu perbaikan' and kepatuhanregualasi == 'Pelanggan tidak puas':
         result = 'ISP Perlu Peningkatan'
-        explanation.append("Rule 7: Tidak puas → ISP Perlu Peningkatan")
-    elif lt == 'Tidak perlu upgrade kualitas' and sb == 'Perlu perbaikan' and kp == 'Memenuhi aturan' and kpgn == 'Pelanggan puas':
+        explanation.append("Rule 7: Pelanggan tidak puas → ISP Perlu Peningkatan")
+    elif layananteknis == 'Tidak perlu upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepuasanpelanggan == 'Memenuhi aturan' and kepatuhanregualasi == 'Pelanggan puas':
         result = 'ISP Berkualitas Baik'
-        explanation.append("Rule 8: Walau strategi perlu perbaikan, tapi aturan & pelanggan puas → ISP Baik")
-    elif lt == 'Tidak perlu upgrade kualitas' and sb == 'Perlu perbaikan' and kpgn == 'Pelanggan puas':
+        explanation.append("Rule 8: Hanya strategi yang lemah → ISP Berkualitas Baik")
+    elif layananteknis == 'Tidak perlu upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepuasanpelanggan == 'Memenuhi aturan' and kepatuhanregualasi == 'Pelanggan puas':
         result = 'ISP Perlu Perbaikan'
-        explanation.append("Rule 9/10: Strategi perlu perbaikan → ISP Perlu Perbaikan")
-    elif lt == 'Tidak perlu upgrade kualitas' and sb == 'Perlu perbaikan' and kp == 'Tidak memenuhi aturan' and kpgn == 'Pelanggan tidak puas':
+        explanation.append("Rule 9: Strategi lemah meski lainnya baik → ISP Perlu Perbaikan")
+    elif layananteknis == 'Tidak perlu upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepuasanpelanggan == 'Tidak memenuhi aturan' and kepatuhanregualasi == 'Pelanggan puas':
+        result = 'ISP Perlu Perbaikan'
+        explanation.append("Rule 10: Beberapa komponen bermasalah → ISP Perlu Perbaikan")
+    elif layananteknis == 'Tidak perlu upgrade kualitas' and strategibisnis == 'Perlu perbaikan' and kepuasanpelanggan == 'Tidak memenuhi aturan' and kepatuhanregualasi == 'Pelanggan tidak puas':
         result = 'ISP Bermasalah'
         explanation.append("Rule 11: Semua buruk → ISP Bermasalah")
     else:
