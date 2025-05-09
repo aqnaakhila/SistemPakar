@@ -4,6 +4,7 @@ def kategorikan_input(data):
     # Stabilitas Jaringan: RTO
     rto = int(data['RTO'])
     result['Stabilitas Jaringan'] = 'Baik' if rto <= 2 else 'Buruk'
+    print(f"rto : {rto}")
 
     # Kapasitas Bandwidth (Mbps)
     bw = float(data['Bandwidth'])
@@ -13,6 +14,7 @@ def kategorikan_input(data):
         result['Kapasitas Bandwidth'] = 'Sedang'
     else:
         result['Kapasitas Bandwidth'] = 'Rendah'
+    print(f"bandwith : {bw}")
 
     # Harga (Rp)
     harga = int(data['Harga'])
@@ -22,6 +24,7 @@ def kategorikan_input(data):
         result['Harga Kategori'] = 'Standar'
     else:
         result['Harga Kategori'] = 'Mahal'
+    print(f"harga : {harga}")
 
     # Rating (0–10)
     rating = float(data['Rating'])
@@ -31,10 +34,14 @@ def kategorikan_input(data):
         result['Rating Kategori'] = 'Normal'
     else:
         result['Rating Kategori'] = 'Buruk'
+    print(f"rating : {rating}")
 
     # Tambahkan juga input dropdown apa adanya
     result['Pelayanan'] = data['Pelayanan']
+    print(f"Pelayanan :{result['Pelayanan']}")
     result['Kualitas Layanan'] = data['Kualitas Layanan']
+    print(f"Kualitas Layanan :{result['Kualitas Layanan']}")
     result['Kepatuhan Regulasi'] = data['Kepatuhan Regulasi']
+    print(f"Kepatuhan Regulasi :{result['Kepatuhan Regulasi']}")
 
     return result
