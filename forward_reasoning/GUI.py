@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from forward_reasoning.inferensi import infer  
+from forward_reasoning.CF import *
 
 class ISPApp:
     def __init__(self, root):
@@ -13,40 +14,42 @@ class ISPApp:
         self.result_label.pack(pady=10)
 
     def create_form(self):
-        numeric_fields = {
-            "RTO (x/bulan)": "RTO",
-            "Bandwidth (Mbps)": "Bandwidth",
-            "Harga (Rp)": "Harga",
-            "Rating (0-10)": "Rating"
-        }
+        form_fields = [
+            ("RTO (x/bulan)", "RTO", "entry"),
+            ("Bandwidth (Mbps)", "Bandwidth", "entry"),
+            ("Harga (Rp)", "Harga", "entry"),
+            ("Pelayanan", "Pelayanan", ["Baik", "Buruk"]),
+            ("Rating (0-10)", "Rating", "entry"),
+            ("Kualitas Layanan", "Kualitas Layanan", ["Bagus", "Buruk"]),
+            ("Kepatuhan Regulasi", "Kepatuhan Regulasi", ["Memenuhi aturan", "Tidak memenuhi aturan"])
+        ]
 
-        for label, key in numeric_fields.items():
+        for label, key, widget in form_fields:
             frame = ttk.Frame(self.root)
             frame.pack(padx=10, pady=3, fill="x")
+
             ttk.Label(frame, text=label, width=25).pack(side="left")
             var = tk.StringVar()
             self.inputs[key] = var
 
-            entry = ttk.Entry(frame, textvariable=var)
-            entry.pack(side="left", fill="x", expand=True)
+            if widget == "entry":
+                entry = ttk.Entry(frame, textvariable=var)
+                entry.pack(side="left", fill="x", expand=True)
 
-            # Format Harga saat diketik
-            if key == "Harga":
-                entry.bind("<KeyRelease>  ",lambda e, v=var: self.format_rupiah(e, v),)
+                if key == "Harga":
+                    entry.bind("<KeyRelease>", lambda e, v=var: self.format_rupiah(e, v))
+            else:
+                ttk.Combobox(frame, textvariable=var, values=widget, state="readonly").pack(side="left", fill="x",
+                                                                                            expand=True)
 
-        dropdown_fields = {
-            "Pelayanan": ["Baik", "Buruk"],
-            "Kualitas Layanan": ["Bagus", "Buruk"],
-            "Kepatuhan Regulasi": ["Memenuhi aturan", "Tidak memenuhi aturan"]
-        }
-
-        for label, options in dropdown_fields.items():
-            frame = ttk.Frame(self.root)
-            frame.pack(padx=10, pady=3, fill="x")
-            ttk.Label(frame, text=label, width=25).pack(side="left")
-            var = tk.StringVar()
-            self.inputs[label] = var
-            ttk.Combobox(frame, textvariable=var, values=options, state="readonly").pack(side="left", fill="x", expand=True)
+        # Pilih metode inferensi
+        frame = ttk.Frame(self.root)
+        frame.pack(padx=10, pady=3, fill="x")
+        ttk.Label(frame, text="Metode Inferensi", width=25).pack(side="left")
+        self.method_var = tk.StringVar(value="Forward Reasoning")
+        ttk.Combobox(frame, textvariable=self.method_var,
+                     values=["Forward Reasoning", "Certainty Factor"],
+                     state="readonly").pack(side="left", fill="x", expand=True)
 
         ttk.Button(self.root, text="Evaluasi", command=self.submit).pack(pady=10)
 
@@ -70,10 +73,23 @@ class ISPApp:
             data[key] = val
 
         try:
-            result, inferred, explanation = infer(data)
-            penjelasan = "\n".join(explanation)
-            messagebox.showinfo("Hasil Evaluasi", f"Hasil: {result}\n\nPenjelasan:\n{penjelasan}")
-            self.result_label.config(text=f"Hasil: {result}")
+            method = self.method_var.get()
+
+            if method == "Certainty Factor":
+                engine = CertaintyFactorEngine(rules)
+                hasil_cf = engine.infer(data)
+                if hasil_cf:
+                    hasil_text = "\n".join(f"{k}: CF = {round(v, 4)}" for k, v in hasil_cf.items())
+                    self.result_label.config(text="Hasil: " + max(hasil_cf, key=hasil_cf.get))
+                    messagebox.showinfo("Hasil Evaluasi", f"Hasil:\n{hasil_text}")
+                else:
+                    self.result_label.config(text="Tidak ada kesimpulan")
+                    messagebox.showinfo("Hasil Evaluasi", "Tidak ada kesimpulan berdasarkan data.")
+            else:
+                result, inferred, explanation = infer(data)
+                penjelasan = "\n".join(explanation)
+                self.result_label.config(text=f"Hasil: {result}")
+                messagebox.showinfo("Hasil Evaluasi", f"Hasil: {result}\n\nPenjelasan:\n{penjelasan}")
         except Exception as e:
             messagebox.showerror("Error", f"Gagal proses data: {e}")
 
