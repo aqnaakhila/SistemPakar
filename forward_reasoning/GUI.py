@@ -1,7 +1,11 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+
+from forward_reasoning.Rules import rules
 from forward_reasoning.inferensi import infer  
 from forward_reasoning.CF import *
+from forward_reasoning.kategory import *
+
 
 class ISPApp:
     def __init__(self, root):
@@ -77,7 +81,9 @@ class ISPApp:
 
             if method == "Certainty Factor":
                 engine = CertaintyFactorEngine(rules)
-                hasil_cf = engine.infer(data)
+                data_terkategori = kategorikan_input(data)  # <-- Tambahkan ini
+                hasil_cf = engine.infer(data_terkategori)  # <-- Kirim ke CF engine
+                print(f"Data yang diberikan untuk inferensi: {data}")
                 if hasil_cf:
                     hasil_text = "\n".join(f"{k}: CF = {round(v, 4)}" for k, v in hasil_cf.items())
                     self.result_label.config(text="Hasil: " + max(hasil_cf, key=hasil_cf.get))
